@@ -1,0 +1,69 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    {% url admin:jsi18n as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+           
+
+
+{% block content %}
+
+
+<div id="content-main">
+
+   </br>
+   </br>
+   <div class="float-left">
+   <div class="module" id="recent-actions-module">
+      <table border = "1">
+         <h2> Timesheet  </h2>
+         <tr  >          
+          {% for dusuario in dusuarios %}
+            {% if dusuario.get_timesheet_horas %}  
+            
+                 <td >
+                   <div class="float-left">
+                    <table  id="result_list">
+                       
+                     <tr> <th> {{ dusuario.user_username }} </th> </tr>
+                     {% for timesheet in dusuario.get_timesheet_horas %} 
+                     <tr  >          
+                         <td>{{ timesheet.data|date:"d/m/Y"  }} </td>
+                         <td>{{ timesheet.horas|floatformat  }} </td>
+                     </tr>   
+                    {% endfor %} 
+                    </table> 
+                   </div>
+                 </td>
+            {% if forloop.counter|divisibleby:"6" %}
+                 </tr>  
+            {% endif %}
+            {% endif %} 
+           {% endfor %}    
+         </tr> 
+      </table>  
+   </div>
+   </div>
+</div>
+
+
+{% endblock %}
+
+

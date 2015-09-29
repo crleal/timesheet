@@ -1,0 +1,115 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+{% load l10n %}
+
+{% load humanize %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    {% url admin:jsi18n as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+           
+
+
+{% block content %}
+{% load views_reg %}
+
+<div id="content-main">
+
+   </br>
+   </br>
+   <div class="float-left">
+      <div class="module" id="recent-actions-module">
+          <table border = "1">
+             <h2> Resumo  </h2>
+             <tr>
+                <th>Tipo</td>
+                <th>Horas </th>
+             </tr>
+             <tr>   
+                <td >Atividades de Projetos </td> 
+                <td>{{ somaatividade|floatformat  }} </td>
+             </tr>
+             <tr>   
+                 <td>Ordem de Serviços </td> 
+                 <td>{{ somaos|floatformat  }} </td>
+             </tr>
+          </table> 
+          </br>
+          <table border = "1"  id="result_list">
+              <h2> OS por Departamento  </h2>
+              <tr>
+                  <th>Departamento</th>
+                     {% for dd in os_anomes %}
+                        <th>{{ dd.ano }} / {{ dd.anomes }}</th>
+                     {% endfor %} 
+                  <th> Total </th>
+              </tr>
+              <tfoot>
+                  <td>Total</td>
+                   {% for dd in os_anomes %}
+                       <td align=right>{{ dd.total }}</td>
+                   {% endfor %} 
+                  <td>  </td>
+              </tfoot>
+
+                 {% for osdep in os_dep_dept%} 
+                 <tr class="{% cycle 'row1' 'row2' %}">
+                   <td >{{ osdep.dept_id__dept_name }} </td> 
+                   {% for dd in os_anomes %}
+                       <td align=right> {{ dd|pegatotalmesdep:osdep.dept_id }} </td>  
+                   {% endfor %} 
+                   <td align=right> {{ osdep.total }}</td>
+                </tr>
+                {% endfor %}                     
+          </table> 
+          </br>
+          <table border = "1">
+             <h2> Horas OS por Departamento  </h2>
+           
+              <tr>
+                  <th>Departamento</th>
+                     {% for dd in os_anomes_horas %}
+                        <th>{{ dd.ano }} / {{ dd.anomes }}</th>
+                     {% endfor %} 
+                  <th> Horas </th>
+              </tr>
+              <tfoot>
+                  <td>Total</td>
+                   {% for dd in os_anomes_horas %}
+                       <td align=right>{{ dd.total|floatformat|intcomma  }}</td>
+                   {% endfor %} 
+                  <td>  </td>
+              </tfoot>
+
+              {% for osdephoras in os_dep_horas %}
+                 <tr class="{% cycle 'row1' 'row2' %}" >
+                    <td >{{ osdephoras.ticket__dept_id__dept_name }}   
+                    {% for dd in os_anomes_horas %}
+                       <td align=right>{{ dd|pegatotalhorasmesdep:osdephoras.ticket__dept_id__dept_id|floatformat|intcomma }} </td> 
+                    {% endfor %} 
+                    <td align=right>{{ osdephoras.total|floatformat|intcomma }} </td>
+                 </tr>
+              {% endfor %}     
+
+          </table> 
+      </div>
+   </div>
+</div>
+{% endblock %}
+

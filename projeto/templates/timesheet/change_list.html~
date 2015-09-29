@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %}
+
+{% block result_list %}
+<p>
+  Quantidade: {{ total }}<br/>
+  Soma: {{ total|floatformat:2 }}
+</p>
+{% endblock result_list %}
+<p>
+ fff  Quantidade: {{ total }}<br/>
+ ffff Soma: {{ total|floatformat:2 }}
+</p>

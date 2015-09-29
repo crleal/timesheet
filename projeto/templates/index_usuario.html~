@@ -1,0 +1,153 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block coltype %}colMS{% endblock %}
+           
+
+
+{% block content %}
+
+
+<div id="content-main">
+
+<a href="cadastros/projeto/timesheet/">Preencher TimeSheet</a>
+</p>
+<a href="usuariohoras/">Resumo diario</a>
+</br>
+</br>
+</br>
+</br>
+
+
+<button type="button" onClick="if(confirm('Confirma ?')) location.href='atualizarperc/';">Atualizar %</button>
+
+</br>
+</br>
+<div class="module" id="recent-actions-module">
+   <table border = "1">
+      <h2> OS Sem Atendente </h2>
+
+       <tr>
+             <th>OS </th>
+             <th>Assunto</th>
+             <th>Tipo de Solicitação</th>
+             <th>Projeto </th>
+             <th>Autor</th>
+             <th>Data</th>             
+             <th>Prioridade</th>
+             <th> </th>
+
+       </tr>
+
+       {% for ticket in tickets %}
+          <tr>
+             <td ><a href="cadastros/projeto/os/{{ ticket.ticket}}">{{ ticket.ticket}}</a> </td>
+             <td >{{ ticket.subject   }} </td>
+             <td >{{ ticket.ticket_tipo_os   }} </td> 
+             <td>{{ ticket.ticket_projectc  }} </td>
+             <td>{{ ticket.author  }} </td>
+             <td>{{ ticket.data }} </td>
+             <td>{{ ticket.get_priority_display  }} </td>             
+             <td ><button type="button" onClick="if(confirm('Confirma ?')) location.href='assumir/{{ ticket.ticket}}';">Assumir</button></td>
+          </tr>
+       {% endfor %}
+   </table> 
+</div>
+
+</br>
+</br>
+</br>
+</br>
+
+<div class="module" id="recent-actions-module">
+   <table border = "1">
+      <h2> OS em aberto </h2>
+
+       <tr>
+             <th>OS </th>
+             <th>Assunto</th>
+             <th>Projeto </th>
+             <th>Autor</th>
+             <th>Data</th>             
+             <th>Prioridade</th>
+             <th> </th>
+       </tr>
+
+       {% for ticketaberto in ticketsaberto %}
+          <tr>
+             <td ><a href="cadastros/projeto/os/{{ ticketaberto.ticket}}">{{ ticketaberto.ticket}}</a> </td>
+             <td >{{ ticketaberto.subject   }} </td>
+             <td>{{ ticketaberto.ticket_projectc  }} </td>
+             <td>{{ ticketaberto.author  }} </td>
+             <td>{{ ticketaberto.data|date:"d/m/Y H:i" }} </td>
+             <td>{{ ticketaberto.get_priority_display  }} </td>
+              <td ><button type="button" onClick="if(confirm('Confirma ?')) location.href='encerradoos/{{ ticketaberto.ticket}}';">Encerrar</button></td>
+          </tr>
+       {% endfor %}
+   </table> 
+</div>
+  
+</br>
+</br>
+</br>
+<div class="module" id="recent-actions-module">
+   <table border = "1">
+      <h2> Atividades  </h2>
+       <tr>
+             <th>Id </td>
+             <th>Atividade</th>
+             <th>Projeto </th>
+             <th>Inicio </th>     
+             <th>Previsão </th>     
+
+
+       </tr>
+           
+       {% for atividade in atividades %}
+         {% if atividade.task_id.task_end_date < now  %} 
+          <tr style="background-color:#cc6666;color:#ffffff" >
+         {% else %}
+          <tr  > 
+         {% endif %}
+             <td ><a href="cadastros/projeto/atividades/{{ atividade.task_id.task_id}}">{{ atividade.task_id.task_id}}</a> </td>
+             <td >{{ atividade.task_id.task_name   }} </td>
+             <td>{{ atividade.task_id.task_project  }} </td>
+             <td>{{ atividade.task_id.task_start_date|date:"d/m/Y"   }} </td>
+             <td {% if  not atividade.task_id.future_data  %}  style="background-color:#cc6666;color:#ffffff" {% endif %}>{{ atividade.task_id.task_end_date|date:"d/m/Y" }} </td>             
+          </tr>
+       {% endfor %}
+   </table> 
+  
+</div>
+
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Últimos preenchimentos' %}</h2>     
+            {% load views_reg %}
+            {% get_timesheet 20 as dados for_user user %}
+            {% if not dados %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in dados %}
+            <li >
+                   <span ><a href="cadastros/projeto/timesheet/{{ entry.id}}">{{ entry.data|date:"d/m/Y" }}</a></span> |
+                   <span >{{ entry.hora_inicio }}</span> -
+                   <span >{{ entry.hora_final }}</span>
+             </li>
+            
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </br>
+        
+    </div>
+</div>
+{% endblock %}
+
+ 

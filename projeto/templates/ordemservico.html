@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"pt-br" }}" xml:lang="{{ LANGUAGE_CODE|default:"pt-br" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+
+  {% block meta %}  
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-Language" content="pt-br" />
+  {% endblock meta %}
+
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/base.css{% endblock %}" />
+{% block extrastyle %}{% endblock %}
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% load adminmedia %}{% admin_media_prefix %}css/ie.css{% endblock %}" /><![endif]-->
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% admin_media_prefix %}css/rtl.css{% endblock %}" />{% endif %}
+<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+
+
+{% block content %}
+
+
+<div id="content-main">
+   {% if mostrarUser %}<h3><font color="green">{{ mostrarUser }}</font></h3>{% endif %} 
+   {% if mostrar %}<h3><font color="green">{{ mostrar }}</font></h3>{% endif %}
+   {% if mensagemerro %}<h3><font color="red">{{ mensagemerro }}</font></h3>{% endif %}
+   <h3>Informe seus dados abaixo:</h3>
+   <form method="post" enctype="multipart/form-data">
+      <table>
+        {{ form.as_table }}
+      
+
+        {{ formset.as_table }}
+        <tr>
+           <th>&nbsp;</th>
+           <td><input type="submit" value="Enviar Solicitação"/></td>
+        </tr>
+      </table>
+      </form>
+
+
+</div>
+{% endblock %}
+

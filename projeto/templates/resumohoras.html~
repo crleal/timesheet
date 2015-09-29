@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    {% url admin:jsi18n as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+           
+
+
+{% block content %}
+
+
+<div id="content-main">
+
+   </br>
+   </br>
+   <div class="float-left">
+      <div class="module" id="recent-actions-module">
+          <table border = "1">
+             <h2> OS tipo  </h2>
+             <tr>
+                <th>Tipo OS</td>
+                <th>Horas </th>
+             </tr>
+                {% for dd in timesheet %}
+                   <tr  >   
+                       <td >Atividades de Projetos </td> 
+                      <td>{{ dd|floatformat  }} </td>
+                   </tr>
+                {% endfor %}    
+
+                 {% for dd in doss %}
+                   <tr  >   
+                       <td >{{ dd }} </td> 
+                      <td>{{ dd.horas|floatformat  }} </td>
+                   </tr>
+                {% endfor %}    
+ 
+          </table> 
+      </div>
+   </div>
+</div>
+{% endblock %}
+

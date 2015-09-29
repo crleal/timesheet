@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    {% url admin:jsi18n as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block content %}
+
+
+<div id="content-main">
+
+   </br>
+   </br>
+   <div class="float-left">
+   <div class="module" id="recent-actions-module">      
+       <table>    
+          {% for tt in timesheet %}  
+             <tr> <td colspan="2"><h2> {{ tt.usuario }} - {{ tt.data|date:"d/m/Y"  }}<h2>   </td> </tr>       
+             <tr> <td> Os: </td> 
+                  <td> {{ tt.ticket  }} </td> </tr>
+    	     <tr> <td> Atividade: </td> 
+                  <td> {{ tt.task_id  }} </td> </tr>
+    	     <tr> <td> % Concluido Atividade: </td> 
+                  <td> {{ tt.percent_complete }} </td> </tr>
+             <tr> <td> Horário: </td> 
+                  <td> {{ tt.hora_inicio }} ate {{ tt.hora_final }} - {{ tt.horastrab  }} </td> </tr>
+
+             <tr>  <td> Comentários: </td> 
+                   <td> {{ tt.cometarios }} </td> </tr>
+             <tr> <td> </td> </tr>
+          
+          {% endfor %}    
+       </table>    
+   </div>
+   </div>
+</div>
+
+{% endblock %}
+
+
